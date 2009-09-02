@@ -2,6 +2,9 @@
 #labels Featured
 
 = 1 Starting from Scratch =
+
+It is possible to remove and use any part of the library. Section 1 below contains several standalone examples using functionality from `library/core`. If you don't want such custom control, skip to section 2 where you will learn how to use the SCORM content template.
+
 == 1.1 Hello, world ==
 
 Every SCO requires the files LMS.js and LibScormException.js; these
@@ -207,4 +210,7 @@ ExitBackward()
 ExitChoice(target)
 	Available 'targets' are defined in content package sequencing.
 ExitAll()
+
+= 2 Making an HTML or Flash SCO with the template =
+
 	As described in SCORM docs.
