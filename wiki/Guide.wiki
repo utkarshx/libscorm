@@ -9,7 +9,7 @@ This section illustrates how to use each core class individually. Let's start wi
 
 == 1.1 Hello, world ==
 
-Every SCO requires the files LMS.js and LibScormException.js; these
+Every SCO requires the files `LMS.js` and `LibScormException.js`; these
 files are located in `library/core` and suffice to connect to SCORM.
 
 Hello, world! (Actually, hello <learner name>)
@@ -147,11 +147,11 @@ Although performing such sequencing requests is a matter of a few
 SCORM API calls, doing so is tricky because it will terminate the
 SCO. Some parts of your code may not know others' pre-termination cleanup
 requirements, hence shouldn't terminate the SCO indiscriminately. Using
-the InterScoSeq class, you can establish an event handler to be called
+the `InterScoSeq` class, you can establish an event handler to be called
 before termination.
 
-Be careful not to call Terminate() more than once. The following
-example checks IsTerminated() to avoid duplicating termination invoked
+Be careful not to call `Terminate()` more than once. The following
+example checks `IsTerminated()` to avoid duplicating termination invoked
 by inter-sco sequencing. The example will do nothing interesting outside
 of a content package.
 
