@@ -212,7 +212,6 @@ ExitBackward()
 ExitChoice(target)
 	Available 'targets' are defined in content package sequencing.
 ExitAll()
+	As described in SCORM docs.
 
 = 2 Making an HTML or Flash SCO with the template =
-
-	As described in SCORM docs.
