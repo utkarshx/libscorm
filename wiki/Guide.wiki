@@ -214,4 +214,5 @@ ExitChoice(target)
 ExitAll()
 	As described in SCORM docs.
 
+
 = 2 Making an HTML or Flash SCO with the template =
