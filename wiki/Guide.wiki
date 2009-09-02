@@ -76,7 +76,7 @@ GetErrorString()
 
 == 1.3 Objectives and Interactions ==
 
-They are both instances of "CMI Bags" &mdash; CMI collections with no specified
+They are both instances of "CMI Bags" -- CMI collections with no specified
 order, and are manipulated similarly in LibSCORM. The library caches bag
 values, so repeated access will not result in slow duplicate LMS calls.
 
