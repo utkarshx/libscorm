@@ -1,9 +1,11 @@
 #summary How to use LibSCORM 2.7
 #labels Featured
 
+It is possible to remove and use any part of the library. Section 1 below contains several standalone examples using functionality from `library/core`. If you don't want such custom control, skip to section 2 where you will learn how to use the SCORM content template.
+
 = 1 Starting from Scratch =
 
-It is possible to remove and use any part of the library. Section 1 below contains several standalone examples using functionality from `library/core`. If you don't want such custom control, skip to section 2 where you will learn how to use the SCORM content template.
+This section illustrates how to use each core class individually. Let's start with the simplest example: discovring the learner's name and displaying a greeting.
 
 == 1.1 Hello, world ==
 
