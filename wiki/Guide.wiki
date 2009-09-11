@@ -200,7 +200,7 @@ of a content package.
 </html>
 }}}
 
-== 1.6 InterScoSeq Class Methods ==
+== 1.6 !InterScoSeq Class Methods ==
 
 Constructor(lms, onBeforeTerminate)
 	The second argument is a function. 
