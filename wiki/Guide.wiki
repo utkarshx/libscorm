@@ -57,7 +57,7 @@ Terminate()
 !SetValue(name, value)
 	'name' is an element of the CMI data model. 
 Commit()
-	Alerts the LMS that the data sent by SetValues should be
+	Alerts the LMS that the data sent by !SetValues should be
 	committed to persistent storage. Some LMSes use this as a cue
 	to update the course table of contents or other sequencing
 	interface elements.
