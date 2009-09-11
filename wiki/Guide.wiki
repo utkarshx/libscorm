@@ -3,6 +3,8 @@
 
 It is possible to remove and use parts of the library individually. Section 1 below contains several standalone examples using functionality from `library/core`. If you don't want such custom control, skip to section 2 where you will learn how to use the SCORM content template.
 
+<wiki:toc max_depth="1" />
+
 = 1 Starting from Scratch =
 
 This section illustrates how to use each core class individually. Let's start with the simplest example: discovering the learner's name and displaying a greeting.
