@@ -5,7 +5,7 @@ It is possible to pick and choose parts of the library. Section 1 below contains
 
 <wiki:toc max_depth="2" />
 
-= 1 Starting from Scratch =
+= 1 Core Library Classes =
 
 This section illustrates how to use each core class individually. Let's start with the simplest example: discovering the learner's name and displaying a greeting.
 
@@ -261,3 +261,13 @@ These variables simplify your code. For instance, here is a rewrite of example 1
 To test this, copy the above into a new HTML file, add the file to the `template` directory, and follow the steps in the previous section. When you launch it from an LMS, you should see it greet you. If you open `index.html` directly in a browser, it should say "Not connected to LMS."
 
 == 2.2 For Flash ==
+
+LibSCORM can display Flash SWF files as easily as it can HTML: simply add the Flash filename to `NAV_pages`. Flash SCOs often use their own flashy navigation and you can hide LibSCORM's default navigation bar by editing `configure.js`.
+
+The easiest way to communicate with SCORM in Flash is through !ExternalInterface. In Flash you can get the learner's name by calling
+
+{{{
+ExternalInterface.call("lms.GetValue", "cmi.learner_name");
+}}}
+
+Flash does not catch !JavaScript exceptions, so be vigilant and check `lms.GetLastError()` frequently.
