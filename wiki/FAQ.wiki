@@ -5,3 +5,5 @@
   Not yet.
   * I have a question that is not answered by the guide wiki, can I get support?
   Yes, contact Joe Nelson at the ADL Academic Co-Lab. http://www.academiccolab.org/email/22/field_email
+  * Is the "release candidate 3" safe?
+  Should be. Version 2.7 is a major rewrite. It seems to work well but I want to test it in a real project before releasing it officially.
