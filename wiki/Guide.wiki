@@ -217,4 +217,43 @@ Constructor(lms, onBeforeTerminate)
 	As described in SCORM docs.
 
 
-= 2 Making an HTML or Flash SCO with the template =
+= 2 Using the template =
+
+To assemble a SCO from HTML or Flash files, copy the files into the `template` subdirectory of the LibSCORM distribution. Rename your HTML files as necessary before copying them to *avoid overwriting* the `index.html` file.
+
+Next, edit `configure.js` in the `template` directory. This file controls some of your SCO's behavior. Add the names of the new file(s) to the NAV_pages array. For instance
+
+{{{
+var NAV_pages = ['first.html', 'second.swf'];
+}}}
+
+If you save `configure.js` at this point and launch `index.html` from an LMS, your pages will appear with a navigation control to flip through them. Your SCO will automatically find the SCORM API and begin communication.
+
+== 2.1 For HTML ==
+
+The template creates and provides the following global !JavaScript variables to your content.
+|| *variable name* || *class* ||
+|| dc || !DebugConsole ||
+|| lms || LMS ||
+|| iss || !InterScoSeq ||
+|| nav || Nav ||
+|| objectives || CMIBag ||
+|| interactions || CMIBag ||
+
+These variables simplify your code. For instance, here is a rewrite of example 1.1 which uses the `lms` object.
+
+{{{
+<html>
+<body>
+	<p id="message">Not connected to LMS</p>
+</body>
+<script language="JavaScript" type="text/javascript">
+	document.getElementById("message").innerHTML =
+		"Hello, " + lms.GetValue("cmi.learner_name");
+</script>
+</html>
+}}}
+
+Notice how you needn't bother initializing or terminating the SCORM connection.
+
+== 2.2 For Flash ==
