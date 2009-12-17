@@ -229,16 +229,18 @@ var NAV_pages = ['first.html', 'second.swf'];
 
 If you save `configure.js` at this point and launch `index.html` from an LMS, your pages will appear with a navigation control to flip through them. Your SCO will automatically find the SCORM API and begin communication.
 
+The file `configure.js` is self-documenting. See the examples inside it to learn its abilities.
+
 == 2.1 For HTML ==
 
 The template creates and provides the following global !JavaScript variables to your content.
-|| *variable name* || *class* ||
-|| dc || !DebugConsole ||
-|| lms || LMS ||
-|| iss || !InterScoSeq ||
-|| nav || Nav ||
-|| objectives || CMIBag ||
-|| interactions || CMIBag ||
+|| *variable name* || *class* || *availability* ||
+|| dc || !DebugConsole || always available ||
+|| lms || LMS || null if SCORM API not found ||
+|| iss || !InterScoSeq || always available ||
+|| nav || Nav || always available ||
+|| objectives || CMIBag || null if lms is ||
+|| interactions || CMIBag || null if lms is ||
 
 These variables simplify your code. For instance, here is a rewrite of example 1.1 which uses the `lms` object.
 
@@ -248,12 +250,14 @@ These variables simplify your code. For instance, here is a rewrite of example 1
 	<p id="message">Not connected to LMS</p>
 </body>
 <script language="JavaScript" type="text/javascript">
-	document.getElementById("message").innerHTML =
-		"Hello, " + lms.GetValue("cmi.learner_name");
+	if(lms) {
+		document.getElementById("message").innerHTML =
+			"Hello, " + lms.GetValue("cmi.learner_name");
+	}
 </script>
 </html>
 }}}
 
-Notice how you needn't bother initializing or terminating the SCORM connection.
+To test this, copy the above into a new HTML file, add the file to the `template` directory, and follow the steps in the previous section. When you launch it from an LMS, you should see it greet you. If you open `index.html` directly in a browser, it should say "Not connected to LMS."
 
 == 2.2 For Flash ==
