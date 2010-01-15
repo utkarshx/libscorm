@@ -219,6 +219,8 @@ Constructor(lms, onBeforeTerminate)
 
 = 2 Using the template =
 
+[http://www.youtube.com/user/adljnelson Watch] video tutorials.
+
 To assemble a SCO from HTML or Flash files, copy the files into the `template` subdirectory of the LibSCORM distribution. Rename your HTML files as necessary before copying them to *avoid overwriting* the `index.html` file.
 
 Next, edit `configure.js` in the `template` directory. This file controls some of your SCO's behavior. Add the names of the new file(s) to the NAV_pages array. For instance
