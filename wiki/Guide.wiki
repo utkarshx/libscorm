@@ -228,7 +228,28 @@ iss = NoExitBeforeComplete(iss);
 
 This prevents `ExitForward()` and `ExitBackward()` from acting unless the SCO's `completion_status` is `completed`.
 
-= 2 Using the template =
+= 2 Multi-page SCO =
+
+Often SCOs are broken into pages which share the same SCORM session. LibSCORM provides a class and decorators to implement this pattern.
+
+== 2.2 Nav Class Methods ==
+
+Constructor(pageUrls, contentDivId, lms, iss, asyncErrHandler, flashParams)
+	The parameter `pageUrls` must be an array of either filenames or URLs. Both HTML and Flash SWFs are supported. HTML is loaded with AJAX, and SWFs are loaded with `swfobject`. The second parameter, `contentDivId`, is the name of a DOM identifier for a div in which the content will be loaded. The `lms` parameter -- and all parameters thereafter -- are optional. If `lms` is provided, it must be an instance of the LMS class. The Nav class can continue to operate even without `lms` but will not use SCORM features. The `asyncErrHanlder` must be a function. It is called if errors occur as a result of navigation events. If not specified, the default behavior will be to present a generic !JavaScript alert box. Finally, `flashParams` (if supplied) must be an associative array of name-value pairs and is passed verbatim to the SWF. The constructor automatically calls `LoadLocation()`.
+!GotoPage(number)
+	Loads the (zero-based) numbered element from the `pageUrls` array provided to the constructor. Returns `false` if the number is out of range.
+!NextPage(), !PrevPage()
+	Loads the next (or previous) page in the array. If already on the last (or first) page, it will use the `InterScoSeq` class to advance to the next (or previous) SCO in a content package if this is possible.
+!CurrentPageNum(), !NumPages()
+	What you would expect.
+!SaveLocation(), !LoadLocation()
+	Saves and loads the currently active page number as well as those of other pages which have been visited. Uses SCORM's `cmi.location` variable. If not running in an LMS, this function loads the first page, and marks the rest as unvisited.
+!GetVisitedRatio()
+	Returns the number of visited pages divided by the number of total pages.
+!OnPageLoad, !OnBeforeMove
+	These are event hooks. Assign your functions to them to be notified.
+
+= 3 Using the template =
 
 [http://www.youtube.com/user/adljnelson Watch] video tutorials.
 
@@ -244,7 +265,7 @@ If you save `configure.js` at this point and launch `index.html` from an LMS, yo
 
 The file `configure.js` is self-documenting. See the examples inside it to learn its abilities.
 
-== 2.1 For HTML ==
+== 3.1 For HTML ==
 
 The template creates and provides the following global !JavaScript variables to your content.
 || *variable name* || *class* || *availability* ||
@@ -273,7 +294,7 @@ These variables simplify your code. For instance, here is a rewrite of example 1
 
 To test this, copy the above into a new HTML file, add the file to the `template` directory, and follow the steps in the previous section. When you launch it from an LMS, you should see it greet you. If you open `index.html` directly in a browser, it should say "Not connected to LMS."
 
-== 2.2 For Flash ==
+== 3.2 For Flash ==
 
 LibSCORM can display Flash SWF files as easily as it can HTML: simply add the Flash filename to `NAV_pages`. Flash SCOs often use their own flashy navigation and you can hide LibSCORM's default navigation bar by editing `configure.js`.
 
