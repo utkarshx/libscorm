@@ -216,6 +216,17 @@ Constructor(lms, onBeforeTerminate)
 !ExitAll()
 	As described in SCORM docs.
 
+== 1.7 Decorators ==
+
+Decorators allow you to conditionally add or change functionality in the library. The core library provides a decorator for !InterScoSeq which is used like this:
+
+{{{
+lms = new LMS(window);
+iss = new InterScoSeq(lms, function(){});
+iss = NoExitBeforeComplete(iss);
+}}}
+
+This prevents `ExitForward()` and `ExitBackward()` from acting unless the SCO's `completion_status` is `completed`.
 
 = 2 Using the template =
 
