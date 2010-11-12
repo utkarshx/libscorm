@@ -1,7 +1,7 @@
 #summary How to use LibSCORM 2.7
 #labels Featured
 
-It is possible to pick and choose parts of the library. Section 1 below contains several standalone examples using functionality from `library/core`. If you don't want custom control, skip to section 2 where you will learn how to use the SCORM content template to create basic SCOs.
+It is possible to pick and choose parts of the library. Section 1 below contains several standalone examples using functionality from `library/core`. If you don't want custom control, skip to section three where you will learn how to use the SCORM content template to create basic SCOs.
 
 <wiki:toc max_depth="2" />
 
