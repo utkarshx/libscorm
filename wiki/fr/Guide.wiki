@@ -1,0 +1,297 @@
+﻿#summary Comment utiliser LibSCORM 2.7
+
+Il est possible de choisir des parties de la librairie. Le chapitre
+1 ci-dessous contient plusieurs exemples indépendants utilisant une
+fonctionnalité de library/core. Si vous ne voulez pas de contrôle
+personnalisé, passez au chapitre trois où vous apprendrez comment
+utiliser le modèle de contenu SCORM pour créer des SCOs basiques.
+
+<wiki:toc max_depth="2" />
+
+= 1 Classes de la librairie Core =
+
+Ce chapitre montre comment utiliser individuellement chacune des
+classes principales. Commençons par l’exemple le plus simple :
+découvrir le nom de l’apprenant et afficher un message de bienvenue.
+
+== 1.1 Exemple : Hello, world ==
+
+Chaque SCO requiert les fichiers LMS.js et LibScormException.js ;
+ces fichiers se trouvent dans library/core et suffisent pour se
+connecter à SCORM.
+
+Hello, world! (En fait, hello <nom de l’apprenant>)
+
+{{{
+<span><p>
+<head>
+	
+	
+	
+</head>
+<table><tr><td  ><p>
+	<p id="message">Not connected to LMS</p>
+</td></tr></table>
+</span>
+}}}
+
+== 1.2 Méthodes de la classe LMS ==
+
+Constructor(window)
+	Recherche l'API SCORM dans les parents de 'window'.
+Terminate()
+	Assurez-vous que votre SCO appelle cette méthode avant de se s'arrêter.
+!IsTerminated()
+	Booleén.
+!GetValue(name), 
+!SetValue(name, value)
+	'name' est un élément du modèle de données CMI. 
+Commit()
+	Prévient le LMS que la donnée transmise par SetValue doit
+	être enregistrée dans le stockage persistant. Certains LMS
+	utilisent ceci pour mettre à jour la table des matières du
+	cours ou d'autres éléments de l'interface de séquencement.
+!StartSessionTimer(), 
+!PauseSessionTimer(), 
+!RecordSessionTime()
+	Écrit la valeur du chronomètre de session dans 'cmi.session_time'.
+!GetLastError()
+	Renvoie le code d'erreur SCORM de la dernière erreur ou 0.
+	Non recommandée. Repose sur la gestion d'exceptions dans
+	les SCO en java_script. Cette méthode n'est incluse que
+	pour les SCO en Flash (qui ne peuvent pas gérer les
+	exceptions).
+!GetDiagnostic()
+	Renvoie la description de la dernière erreur. Non recommandée. 
+!GetErrorString()
+	Non recommandée.
+
+== 1.3 Exemple : Objectifs et Interactions ==
+
+Ce sont tous les deux des instances de "Conteneurs CMI" – Des
+collections CMI sans ordre spécifique, et sont manipulés de façon
+similaire dans LibSCORM. La librairie met en cache les valeurs de
+conteneur, de sorte que les accès répétés ne résultent pas en une
+duplication d'appels lents au LMS.
+
+Paramétrage du score de l'objectif et de statut de réussite
+
+{{{
+<span><p>
+<head>
+	<deleted>
+	<deleted>
+	<deleted>
+	<deleted>
+</head>
+<table><tr><td  ><p>
+	<p>This SCO is successful but secondary objective
+	   'secondary_name' is not.
+	</p>
+</td></tr></table>
+</span>
+}}}
+
+== 1.4 Méthodes de la classe CMIBag ==
+
+Constructor(lms, bagname)
+	'bagname' est un élément CMI comme par exemple 'objectives'
+	ou 'interactions', ou un sous-conteneur tel que
+	'interactions.n.objectives'.
+!GetValue(id, elem)
+	'elem' est par exemple 'success_status'.
+!SetValue(id, elem, val)
+	Crée 'id' si nécessaire.
+!GetElementList()
+	Renvoie un tableau des 'id' existantes.
+!GetIndex(id)
+	Les indices peuvent changer sans avertissement entre deux
+	sessions d'apprenant. Renvoie -1 si 'id' n'existe pas encore.
+
+== 1.5 Exemple : Séquencement Inter-SCO ==
+
+Bien que l'exécution de ce type de requête de séquencement se résume
+à quelques appels à l'API SCORM, la mise en œuvre est délicate car
+elle va mettre fin à la SCO. Certaines parties de votre code peuvent
+ne pas connaître les contraintes de pré-terminaison des autres, et
+ne devrait par conséquent pas mettre fin indistinctement à une SCO.
+En utilisant la classe InterScoSeq, vous pouvez installer un
+gestionnaire d’événements à appeler avant la terminaison.
+
+Prenez soin de ne pas appeler Terminate() plus d'une fois. L'exemple
+suivant teste IsTerminated() pour éviter la duplication de terminaison
+invoquée par le séquencement inter-SCO. L'exemple ne fera rien
+d'intéressant en-dehors d'un paquetage.
+
+{{{
+<span><p>
+<head>
+	<deleted>
+	<deleted>
+	<deleted>
+	<deleted>
+</head>
+<table><tr><td  ><p>
+	<input type="button" id="btnPrev" value="Previous SCO"
+		disabled="true"  />
+	<input type="button" id="btnNext" value="Next SCO"
+		disabled="true"  />
+</td></tr></table>
+</span>
+}}}
+
+== 1.6 !Méthodes de la classe InterScoSeq ==
+
+Constructor(lms, onBeforeTerminate)
+	Le second argument est une fonction. 
+!CanExitForward()
+!CanExitBackward()
+!CanExitChoice(target)
+	Booléen.
+!ExitForward()
+!ExitBackward()
+	La SCO se terminera.
+!ExitChoice(target)
+	Les 'targets' disponibles sont définies dans le séquencement du paquetage.
+!ExitAll()
+	Comme décrit dans la documentation SCORM.
+
+== 1.7 Decorators ==
+
+Les décorateurs permettent d'ajouter ou de modifier conditionnellement
+une fonctionnalité dans la librairie. La librairie principale fourni
+un décorateur pour InterScoSeq qui est utilisé comme ceci :
+
+{{{
+lms = new LMS(window);
+iss = new InterScoSeq(lms, function(){});
+iss = NoExitBeforeComplete(iss);
+}}}
+
+Cela empêche ExitForward() et ExitBackward() de s'exécuter sauf si
+l'état 'completion_status' de la SCO a la valeur 'completed'.
+
+= 2 SCO Multi-page =
+
+Les SCO sont souvent scindées en pages qui partagent la même session
+SCORM. LibSCORM fourni une classe et des décorateurs qui implémentent
+ce modèle.
+
+== 2.2 Méthodes de la classe Nav ==
+
+Constructor(pageUrls, contentDivId, lms, iss, asyncErrHandler, flashParams)
+	Le paramètre 'pageUrls' doit être un tableau de noms de
+	fichiers ou d'URL. Les fichiers HTML et Flash SWF sont tous
+	les deux pris en charge. Les fichiers HTML sont chargés
+	avec AJAX, et les fichiers SWF sont chargés avec swfobject.
+	Le second paramètre 'contentDivId' est le nom de l'identifiant
+	DOM d'un div dans lequel le contenu sera chargé. Le paramètre
+	'lms' – et tous les paramètres qui suivent – sont optionnels.
+	Si 'lms' est renseigné, ce doit être une instance de la
+	classe LMS. La classe Nav peut fonctionner sans 'lms' mais
+	n'utilisera pas les possibilités de SCORM. Le 'asyncErrHandler'
+	doit être une fonction. Elle est appelée si des erreurs
+	résultent des événements de navigation. S'il n'est pas
+	spécifié, le comportement par défaut sera d'afficher une
+	boîte d'alerte java_script générique. En fin, 'flashParams'
+	(s'il est fourni) devra être un tableau associatif de paires
+	nom-valeur et sera passé tel quel au SWF. Le constructeur
+	appelle automatiquement LoadLocation().
+!GotoPage(number)
+	Charge l'élément numéroté (à partir de 0) depuis le tableau
+	'pageUrls' passé au constructeur. Renvoie 'false' si le
+	nombre est n'est pas correct.
+!NextPage(), !PrevPage()
+	Charge la page suivante (ou précédente) du tableau. Si l'on
+	est déjà sur la dernière (ou première) page, il utilisera
+	la classe 'InterScoSeq' pour passer à la SCO suivante (ou
+	précédente) du paquetage si cela est possible.
+!CurrentPageNum(), !NumPages()
+	Ce que vous supposez.
+!SaveLocation(), !LoadLocation()
+	Sauvegarde et charge le numéro de la page active ainsi que
+	ceux des autres pages qui ont été visitées. Utilise la
+	variable SCORM 'cmi.location'. Si l'exécution n'est pas
+	faite dans un LMS, cette fonction charge la première page
+	et marque le reste comme n'étant pas visité.
+!GetVisitedRatio()
+	Renvoie le nombre de pages visitées divisé par le nombre
+	de pages total.
+!OnPageLoad, !OnBeforeMove
+	Ce sont des gestionnaires d'événements. Assignez leurs vos
+	fonctions pour être notifié.
+
+= 3 Utilisation du modèle =
+
+[http://www.youtube.com/user/adljnelson Regardez] les tutoriels vidéo.
+
+Pour assembler une SCO à partir de fichiers HTML ou Flash, copiez
+les fichiers dans le sous-répertoire 'template' de la distribution
+LibSCORM. Renommez vos fichiers HTML si nécessaire avant de les
+copier pour éviter d'écraser le fichier 'index.html'.
+
+Ensuite, éditez 'configure.js' dans le répertoire 'template'. Ce
+fichier contrôle certains comportements de votre SCO. Ajoutez les
+noms des nouveaux fichiers au tableau NAV_pages. Par exemple :
+
+{{{
+var NAV_pages = ['first.html', 'second.swf'];
+}}}
+
+Si vous enregistrez 'configure.js' à ce stade et que vous lancez
+'index.html' depuis un LMS, vos pages apparaîtront avec un contrôle
+de navigation pour se déplacer entre elles. Votre SCO trouvera
+automatiquement l'API SCORM et entamera la communication.
+
+Le fichier 'configure.js' est auto-documenté. Voir les exemples qui
+s'y trouvent pour connaître ses possibilités.
+
+== 3.1 Pour le HTML ==
+
+Le modèle crée et fourni à votre contenu les variables globales
+java_script suivantes.
+|| *nom de variable* || *classe* || *disponibilité* ||
+|| dc || !DebugConsole || toujours disponible ||
+|| lms || LMS || nul si l'API SCORM n'a pas été trouvée ||
+|| iss || !InterScoSeq || toujours disponible ||
+|| nav || Nav || toujours disponible ||
+|| objectives || CMIBag || nul si lms l'est ||
+|| interactions || CMIBag || nul si lms l'est ||
+
+Ces variables simplifient votre code. Par exemple, voici une
+réécriture de l'exemple 1.1 qui utilise l'objet 'lms'.
+
+{{{
+<span><p>
+<table><tr><td><p>
+	<p id="message">Not connected to LMS</p>
+</td></tr></table>
+<deleted>
+</span>
+}}}
+
+Pour tester ceci, copiez le texte ci-dessus dans un nouveau fichier
+HTML, ajoutez le fichier dans le répertoire 'template' et suivez
+les étapes du chapitre précédent. Lorsque vous le lancez depuis un
+LMS, vous devez recevoir une message de bienvenue. Si vous ouvrez
+le fichier index.html directement dans votre navigateur, vous devez
+recevoir le message "Not connected to LMS."
+
+== 3.2 Pour le Flash ==
+
+LibSCORM peut afficher des fichiers Flash SWF aussi facilement que
+des fichiers HTML : ajoutez simplement le nom du fichier Flash à
+NAV_pages. Les SCO Flash utilisent souvent leur propre système de
+navigation et vous pouvez cacher la barre de navigation par défaut
+de LibSCORM en éditant 'configure.js'.
+
+La manière la plus simple de communiquer avec SCORM en Flash passe
+par 'ExternalInterface'. En Flash vous pouvez récupérer le nom de
+l'apprenant en appelant :
+
+{{{
+ExternalInterface.call("lms.GetValue", "cmi.learner_name");
+}}}
+
+Flash ne capte pas les exceptions java_script, aussi soyez vigilant
+et vérifiez fréquemment lms.GetLastError().
